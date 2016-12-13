@@ -5,6 +5,8 @@ class Restaurant
     @@filepath = File.join(APP_ROOT, path) #assume that path is always relarive to APP_ROOT
   end
 
+  attr_accessor :name, :cuisine, :price
+
   def self.file_exists?
     # class should know if the restaurant file exists
     if @@filepath && File.exists?(@@filepath)
@@ -26,12 +28,20 @@ class Restaurant
     #create the restaurant file
     File.open(@@filepath, 'w') unless file_exists?
     return file_usable? #return as boolean
-
   end
 
   def self.saved_restaurants
     #read the restaurant file
     #return instances of restaurant
+  end
+
+  def save
+    #open file, and write to it
+    return false unless Restaurant.file_usable? #instance method, so we have to ask the class
+    File.open(@@filepath, 'a') do |file| #location (@@filepath)
+      file.puts "#{[@name, @cuisine, @price].join("\t")}\n" #output a tabbed version of the array / export a line to the file
+    end
+    return true #to see if it worked
   end
 
 end

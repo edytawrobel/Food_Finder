@@ -1,9 +1,9 @@
 require 'restaurant'
 class Guide
 
-  class Config
+  class Config #a bit overkill (but shows we can have class inside a class)
     @@actions = ['list', 'find', 'add', 'quit']
-    def self.actions; @@actions; end # reader method
+    def self.actions; @@actions; end # reader method, as it is not accessible outside the class, semicolon to do one line!
   end
 
   def initialize(path=nil)
@@ -35,14 +35,15 @@ class Guide
     conclusion
   end
 
+  # to make sure the user's input is valid
   def get_action
-    action = nil
+    action = nil #has a value first time through the loop
     # Keep asking for user input until we get a valid action
     until Guide::Config.actions.include?(action)
       puts "Actions: " + Guide::Config.actions.join(", ") if action #will output the list of available actions after the first time and only if we have a failure
       print "> "
       user_response = gets.chomp
-      action  = user_response.downcase.strip
+      action  = user_response.downcase.strip #it will still work even if the user gives us capital letters, or capslock
     end
     return action
   end
@@ -54,12 +55,34 @@ class Guide
       when "find"
         puts "Finding..."
       when "add"
-        puts "Adding..."
+        add
       when "quit"
         return :quit
       else
         puts "\nI don't understand that command.\n"
       end
+  end
+
+  def add
+    puts "\nAdd a restaurant\n\n".upcase #title
+    #create a restaurant, give it its values(attributes)
+    restaurant = Restaurant.new
+
+    print "Restaurant name: "
+    restaurant.name = gets.chomp.strip
+
+    print "Cuisine type: "
+    restaurant.cuisine = gets.chomp.strip
+
+    print "Average price: "
+    restaurant.price = gets.chomp.strip
+
+    #save it - appending the data to a file, so we read it back later
+    if restaurant.save
+      puts "\nRestaurant added\n\n"
+    else
+      puts "\nSave Error: Restaurant not added\n\n"
+    end
   end
 
   def introduction
