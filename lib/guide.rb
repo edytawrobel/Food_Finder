@@ -66,16 +66,17 @@ class Guide
   def add
     puts "\nAdd a restaurant\n\n".upcase #title
     #create a restaurant, give it its values(attributes)
-    restaurant = Restaurant.new
-
+    args = {}  #at the end of it, you'll have a hash ready to pass to Restaurant
     print "Restaurant name: "
-    restaurant.name = gets.chomp.strip
+    args[:name] = gets.chomp.strip
 
     print "Cuisine type: "
-    restaurant.cuisine = gets.chomp.strip
+    args[:cuisine] = gets.chomp.strip
 
     print "Average price: "
-    restaurant.price = gets.chomp.strip
+    args[:price] = gets.chomp.strip
+
+    restaurant = Restaurant.new
 
     #save it - appending the data to a file, so we read it back later
     if restaurant.save

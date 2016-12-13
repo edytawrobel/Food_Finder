@@ -35,6 +35,12 @@ class Restaurant
     #return instances of restaurant
   end
 
+  def initialize(args={}) #in case of an empty hash
+    @name    = args[:name]    || "" #default to the empty string in case of no name
+    @cuisine = args[:cuisine] || ""
+    @price   = args[:price]   || ""
+  end
+
   def save
     #open file, and write to it
     return false unless Restaurant.file_usable? #instance method, so we have to ask the class
