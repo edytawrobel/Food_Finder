@@ -1,4 +1,5 @@
 require 'restaurant'
+require 'support/string_extend'
 class Guide
 
   class Config #a bit overkill (but shows we can have class inside a class)
@@ -64,7 +65,7 @@ class Guide
   end
 
   def add
-    puts "\nAdd a restaurant\n\n".upcase #title
+    output_action_header("Add a restaurant") #title
     restaurant = Restaurant.build_using_questions #ask the questions you need to build yourself
 
     #save it - appending the data to a file, so we read it back later
@@ -102,8 +103,8 @@ class Guide
     print " " + "Price".rjust(6) + "\n"   #30+20+6+spaces=60
     puts "-" * 60
     restaurants.each do |rest|  #building the line
-      line = " " << rest.name.ljust(30)
-      line << " " + rest.cuisine.ljust(20)
+      line = " " << rest.name.titleize.ljust(30)
+      line << " " + rest.cuisine.titleize.ljust(20)
       line << " " + rest.formatted_price.rjust(6)
       puts line
     end
