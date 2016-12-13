@@ -76,11 +76,9 @@ class Guide
   end
 
   def list
-    puts "\nListing restaurants\n\n".upcase #title
+    output_action_header("Listing restaurants")
     restaurants = Restaurant.saved_restaurants
-    restaurants.each do |restaurant|
-      puts restaurant.name + " | " + restaurant.cuisine + " | " + restaurant.formatted_price
-    end
+    output_restaurant_table(restaurants)
   end
 
   def introduction
@@ -92,4 +90,24 @@ class Guide
     puts "\n<<< Goodbye and Bon Appretit! >>>\n\n\n"
   end
 
+  private
+
+  def output_action_header(text)
+    puts "\n#{text.upcase.center(60)}\n\n"
+  end
+
+  def output_restaurant_table(restaurants=[])
+    print " " + "Name".ljust(30)
+    print " " + "Cuisine".ljust(20)
+    print " " + "Price".rjust(6) + "\n"   #30+20+6+spaces=60
+    puts "-" * 60
+    restaurants.each do |rest|  #building the line
+      line = " " << rest.name.ljust(30)
+      line << " " + rest.cuisine.ljust(20)
+      line << " " + rest.formatted_price.rjust(6)
+      puts line
+    end
+    puts "No listing found" if restaurants.empty?
+    puts "-" * 60
+  end
 end
