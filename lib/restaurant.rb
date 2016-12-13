@@ -1,4 +1,7 @@
+
+require 'support/number_helper'
 class Restaurant
+  include NumberHelper #the functionality inside the class
 
   @@filepath = nil
   def self.filepath=(path=nil) #a setter method that allows us to call the filepath var. outside Restaurant class
@@ -78,6 +81,10 @@ class Restaurant
       file.puts "#{[@name, @cuisine, @price].join("\t")}\n" #output a tabbed version of the array / export a line to the file
     end
     return true #to see if it worked
+  end
+
+  def formatted_price
+    number_to_currency(@price)
   end
 
 end
