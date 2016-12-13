@@ -29,9 +29,9 @@ class Guide
     result = nil
     until result == :quit
       #   what do you want to do? (list, find, add, quit)
-      action = get_action
+      action, args = get_action
       #   do that action
-      result = do_action(action)
+      result = do_action(action, args)
     end
     conclusion
   end
@@ -44,17 +44,19 @@ class Guide
       puts "Actions: " + Guide::Config.actions.join(", ") if action #will output the list of available actions after the first time and only if we have a failure
       print "> "
       user_response = gets.chomp
-      action  = user_response.downcase.strip #it will still work even if the user gives us capital letters, or capslock
+      args  = user_response.downcase.strip.split(' ') #it will still work even if the user gives us capital letters, or capslock
+      action = args.shift #pulling it out, shift will move it out of the string
     end
-    return action
+    return [action, args]
   end
 
-  def do_action(action)
+  def do_action(action, args=[])
     case action
       when "list"
         list
       when "find"
-        puts "Finding..."
+        keyword = args.shift #second word in the user's input will be the keyword
+        find(keyword)
       when "add"
         add
       when "quit"
@@ -82,6 +84,24 @@ class Guide
     output_restaurant_table(restaurants)
   end
 
+  def find(keyword="")
+    output_action_header("Find a restaurant")
+    if keyword
+      #search
+      #pull back the content of the file
+      restaurant = Restaurant.saved_restaurants
+      found = restaurant.select do |rest|
+        rest.name.downcase.include?(keyword.downcase) ||
+        rest.cuisine.downcase.include?(keyword.downcase) ||
+        rest.price.to_i <= keyword.to_i
+      end
+      output_restaurant_table(found)
+    else
+      puts "Find using a key phrase to search the restaurant list."
+      puts "Exammples: 'find tamale', 'find Mexican', 'find mex'\n\n"
+    end
+  end
+
   def introduction
     puts "\n\n<<< Welcome to the Food Finder >>>"
     puts "This is an interactive guide to help you find the food you crave.\n\n"
@@ -93,6 +113,7 @@ class Guide
 
   private
 
+  #formatting each of our actions' headers
   def output_action_header(text)
     puts "\n#{text.upcase.center(60)}\n\n"
   end
